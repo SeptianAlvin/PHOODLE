@@ -4,10 +4,9 @@
 
 @layer base {
   html, body {
-    height: 100%;
     min-height: 100dvh;
-    overscroll-behavior-y: none;
     -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
   }
 
   /* Smooth touch scrolling */
@@ -34,6 +33,15 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(100, 116, 139, 0.6);
+}
+
+/* Utility to completely hide scrollbar on mobile horizontal carousels */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 @keyframes float {

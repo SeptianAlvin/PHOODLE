@@ -20,7 +20,7 @@ export function Home({
   };
 
   return (
-    <div className="flex-1 flex flex-col overscroll-none">
+    <div className="flex-1 flex flex-col">
       {/* 1. Hero Section + Layout Selector */}
       <Hero
         selectedLayout={selectedLayout}

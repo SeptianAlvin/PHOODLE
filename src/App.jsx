@@ -36,8 +36,12 @@ export function App() {
     showToast('✨ Sesi foto baru dimulai! Silakan pilih format strip dan gaya.', 'info');
   };
 
+  const isEditorView = currentView === 'editor';
+
   return (
-    <div className="min-h-[100dvh] flex flex-col bg-slate-50 text-slate-800 overscroll-none select-none">
+    <div className={`flex flex-col bg-slate-50 text-slate-800 select-none overflow-x-hidden max-w-full w-full ${
+      isEditorView ? 'h-[100dvh] max-h-[100dvh] overflow-hidden' : 'min-h-[100dvh] overflow-y-auto'
+    }`}>
       {/* 1. Global Top Navbar (Selalu Muncul untuk ganti Tier Pro/Free kapan pun) */}
       <Navbar
         userTier={userTier}
@@ -48,7 +52,7 @@ export function App() {
       />
 
       {/* 2. Main Page View Routing */}
-      <main className="flex-1 flex flex-col overscroll-none">
+      <main className={`flex-1 flex flex-col ${isEditorView ? 'overflow-hidden min-h-0 relative' : 'w-full'}`}>
         {currentView === 'home' && (
           <Home
             selectedLayout={selectedLayout}

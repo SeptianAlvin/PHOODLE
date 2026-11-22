@@ -374,23 +374,23 @@ export function Capture({
   const isComplete = filledCount === totalSlots;
 
   return (
-    <div className="flex-1 flex flex-col bg-slate-900 text-white min-h-[100dvh] overscroll-none select-none">
+    <div className="flex-1 flex flex-col bg-slate-900 text-white h-[100dvh] max-h-[100dvh] overflow-hidden overscroll-none select-none">
       
       {/* 1. Header Bar: Navigation & Mode Tabs */}
-      <header className="sticky top-0 z-30 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-3 sm:px-6 py-2.5">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
+      <header className="flex-none bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-3 sm:px-6 py-2">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-1.5 sm:gap-2">
           
           {/* Back button & Brand Logo */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <button
               onClick={() => onNavigate('home')}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white text-xs sm:text-sm font-semibold transition-colors"
+              className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white text-xs sm:text-sm font-semibold transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               <span className="hidden sm:inline">Kembali</span>
             </button>
             <div className="hidden sm:flex items-center gap-2 pl-2 border-l border-slate-700">
-              <img src="/phoodle-logo.png" alt="PHOODLE" className="w-6 h-6 rounded-lg object-cover" />
+              <img src="/phoodle-logo.png" alt="PHOODLE" className="w-5 h-5 rounded-md object-cover" />
               <span className="font-extrabold text-xs tracking-tight text-white">PHOODLE</span>
             </div>
           </div>
@@ -399,36 +399,36 @@ export function Capture({
           <div className="flex items-center bg-slate-800/90 p-1 rounded-2xl border border-slate-700/80 shadow-inner">
             <button
               onClick={() => setActiveTab('camera')}
-              className={`flex items-center gap-2 px-3.5 sm:px-5 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 ${
+              className={`flex items-center gap-1.5 px-3 sm:px-5 py-1 sm:py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 ${
                 activeTab === 'camera'
                   ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              <Camera className="w-4 h-4" />
-              <span>Kamera Langsung</span>
+              <Camera className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span>Kamera</span>
             </button>
 
             <button
               onClick={() => setActiveTab('upload')}
-              className={`flex items-center gap-2 px-3.5 sm:px-5 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 ${
+              className={`flex items-center gap-1.5 px-3 sm:px-5 py-1 sm:py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 ${
                 activeTab === 'upload'
                   ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              <Upload className="w-4 h-4" />
-              <span>Upload Galeri</span>
+              <Upload className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span>Galeri</span>
             </button>
           </div>
 
           {/* Format Badge */}
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1">
             <span className="text-[11px] font-bold text-slate-400 hidden md:inline">
               Format:
             </span>
-            <span className="text-xs font-black px-2.5 py-1 rounded-lg bg-slate-800 text-brand-400 border border-slate-700">
-              {layoutConfig.shortName} ({filledCount}/{totalSlots})
+            <span className="text-xs font-black px-2 sm:px-2.5 py-1 rounded-lg bg-slate-800 text-brand-400 border border-slate-700">
+              {filledCount}/{totalSlots}
             </span>
           </div>
 
@@ -436,10 +436,10 @@ export function Capture({
       </header>
 
       {/* 2. Main Content Area: Responsive Mobile-First Grid/Flex */}
-      <div className="flex-1 flex flex-col md:flex-row max-w-7xl w-full mx-auto p-3 sm:p-5 lg:p-6 gap-4 sm:gap-6 overflow-hidden">
+      <div className="flex-1 min-h-0 flex flex-col md:flex-row max-w-7xl w-full mx-auto p-2 sm:p-4 lg:p-6 gap-2 sm:gap-4 lg:gap-6 overflow-hidden">
         
         {/* Left / Main Section: Live Viewport (Camera or Upload Zone) */}
-        <div className="flex-1 flex flex-col justify-between rounded-3xl bg-slate-950 border border-slate-800 overflow-hidden relative shadow-2xl">
+        <div className="flex-1 min-h-0 flex flex-col justify-between rounded-2xl sm:rounded-3xl bg-slate-950 border border-slate-800 overflow-hidden relative shadow-2xl">
           
           {/* CAMERA TAB */}
           {activeTab === 'camera' && (
@@ -618,8 +618,8 @@ export function Capture({
 
         </div>
 
-        {/* Right / Bottom Section: Pose Thumbnail Slots Panel */}
-        <div className="w-full md:w-80 lg:w-96 flex flex-col justify-between rounded-3xl bg-slate-950 border border-slate-800 p-4 sm:p-5 shadow-xl">
+        {/* DESKTOP ONLY (md:flex): Right Pose Thumbnail Slots Panel */}
+        <div className="hidden md:flex md:w-80 lg:w-96 flex-col justify-between rounded-3xl bg-slate-950 border border-slate-800 p-4 sm:p-5 shadow-xl shrink-0">
           
           <div>
             {/* Panel Title & Status */}
@@ -638,6 +638,7 @@ export function Capture({
 
               {filledCount > 0 && (
                 <button
+                  type="button"
                   onClick={handleRetakeAll}
                   className="flex items-center gap-1 text-[11px] font-bold text-rose-400 hover:text-rose-300 p-1 rounded-lg transition-colors"
                   title="Hapus semua foto dan mulai ulang"
@@ -648,8 +649,8 @@ export function Capture({
               )}
             </div>
 
-            {/* Thumbnail Slots Grid: Horizontal row on mobile, Vertical stack on laptop */}
-            <div className="grid grid-cols-3 md:grid-cols-1 gap-2.5 sm:gap-3 max-h-[220px] md:max-h-[460px] overflow-y-auto pr-1">
+            {/* Thumbnail Slots Stack (Laptop view) */}
+            <div className="flex flex-col gap-2.5 max-h-[calc(100dvh-280px)] overflow-y-auto pr-1">
               {Array.from({ length: totalSlots }).map((_, index) => {
                 const photo = capturedPhotos[index];
                 const isActive = activeSlotIndex === index;
@@ -687,7 +688,7 @@ export function Capture({
                     </div>
 
                     {/* Metadata & Retake Button (Laptop view) */}
-                    <div className="hidden md:flex flex-1 items-center justify-between">
+                    <div className="flex flex-1 items-center justify-between">
                       <div>
                         <div className="text-xs font-bold text-slate-200">
                           {photo ? `Pose #${index + 1} Siap` : `Slot #${index + 1} Kosong`}
@@ -699,6 +700,7 @@ export function Capture({
 
                       {photo ? (
                         <button
+                          type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleRetakeSlot(index);
@@ -714,29 +716,16 @@ export function Capture({
                         </span>
                       )}
                     </div>
-
-                    {/* Mobile Quick Retake Overlay on Thumbnail */}
-                    {photo && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRetakeSlot(index);
-                        }}
-                        className="md:hidden absolute top-1 right-1 p-1 bg-black/70 rounded-full text-rose-300"
-                        title="Retake Slot Ini"
-                      >
-                        <RotateCcw className="w-3 h-3" />
-                      </button>
-                    )}
                   </div>
                 );
               })}
             </div>
           </div>
 
-          {/* Bottom Action: Proceed to Canvas Editor */}
+          {/* Bottom Action: Proceed to Canvas Editor (Desktop) */}
           <div className="pt-4 mt-3 border-t border-slate-800/80">
             <button
+              type="button"
               onClick={() => onNavigate('editor')}
               disabled={!isComplete}
               className={`w-full py-3.5 px-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 transition-all duration-200 ${
@@ -757,6 +746,69 @@ export function Capture({
           </div>
 
         </div>
+
+      </div>
+
+      {/* MOBILE ONLY (< md): Bottom Floating Dock - Slots Thumbnails & Quick Proceed */}
+      <div className="flex md:hidden flex-none bg-slate-950/95 backdrop-blur-md border-t border-slate-800 px-3 py-2 items-center justify-between gap-2 z-20 pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
+        
+        {/* Horizontal Mini Slots */}
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+          {Array.from({ length: totalSlots }).map((_, index) => {
+            const photo = capturedPhotos[index];
+            const isActive = activeSlotIndex === index;
+
+            return (
+              <div
+                key={index}
+                onClick={() => setActiveSlotIndex(index)}
+                className={`relative w-11 h-11 rounded-xl overflow-hidden shrink-0 border transition-all cursor-pointer flex items-center justify-center ${
+                  isActive
+                    ? 'border-brand-500 ring-2 ring-brand-500/40 bg-slate-800'
+                    : photo
+                    ? 'border-slate-700 bg-slate-800'
+                    : 'border-dashed border-slate-800 bg-slate-900/50'
+                }`}
+              >
+                {photo ? (
+                  <>
+                    <img src={photo} alt={`#${index + 1}`} className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRetakeSlot(index);
+                      }}
+                      className="absolute inset-0 bg-black/40 hover:bg-black/60 flex items-center justify-center text-rose-300 opacity-0 hover:opacity-100 transition-opacity"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                    </button>
+                  </>
+                ) : (
+                  <span className="text-[10px] font-black text-slate-500">#{index + 1}</span>
+                )}
+                <span className="absolute bottom-0 right-0 bg-black/70 text-[8px] font-mono px-1 rounded-tl text-slate-300">
+                  {index + 1}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Mobile Proceed Button */}
+        <button
+          type="button"
+          onClick={() => onNavigate('editor')}
+          disabled={!isComplete}
+          className={`shrink-0 flex items-center gap-1 px-3.5 py-2.5 rounded-xl font-black text-xs transition-all ${
+            isComplete
+              ? 'bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 text-white shadow-md shadow-brand-500/30 active:scale-95'
+              : 'bg-slate-800 text-slate-500 border border-slate-700/60 cursor-not-allowed'
+          }`}
+        >
+          <span>{isComplete ? 'Lanjut Edit' : `${filledCount}/${totalSlots} Pose`}</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </button>
 
       </div>
 
