@@ -436,14 +436,14 @@ export function Capture({
       </header>
 
       {/* 2. Main Content Area: Responsive Mobile-First Grid/Flex */}
-      <div className="flex-1 min-h-0 flex flex-col md:flex-row max-w-7xl w-full mx-auto p-2 sm:p-4 lg:p-6 gap-2 sm:gap-4 lg:gap-6 overflow-hidden">
+      <div className="flex-1 min-h-0 flex flex-col md:flex-row max-w-7xl w-full mx-auto p-1.5 sm:p-4 lg:p-6 gap-1.5 sm:gap-4 lg:gap-6 overflow-hidden">
         
         {/* Left / Main Section: Live Viewport (Camera or Upload Zone) */}
-        <div className="flex-1 min-h-0 flex flex-col justify-between rounded-2xl sm:rounded-3xl bg-slate-950 border border-slate-800 overflow-hidden relative shadow-2xl">
+        <div className="flex-1 min-h-0 max-h-[54dvh] sm:max-h-none flex flex-col justify-between rounded-2xl sm:rounded-3xl bg-slate-950 border border-slate-800 overflow-hidden relative shadow-2xl">
           
           {/* CAMERA TAB */}
           {activeTab === 'camera' && (
-            <div className="relative flex-1 flex items-center justify-center bg-black min-h-[300px] sm:min-h-[420px] overflow-hidden">
+            <div className="relative flex-1 min-h-0 max-h-[54dvh] sm:max-h-none flex items-center justify-center bg-black sm:min-h-[420px] overflow-hidden">
               
               {/* Shutter Screen Flash Overlay */}
               <div
@@ -580,7 +580,7 @@ export function Capture({
 
           {/* UPLOAD GALERI TAB */}
           {activeTab === 'upload' && (
-            <div className="relative flex-1 flex flex-col items-center justify-center bg-slate-950 p-6 sm:p-10 text-center">
+            <div className="relative flex-1 min-h-0 flex flex-col items-center justify-center bg-slate-950 p-4 sm:p-10 text-center overflow-y-auto">
               <div className="max-w-md w-full border-2 border-dashed border-slate-700 hover:border-brand-500 rounded-3xl p-8 sm:p-12 flex flex-col items-center justify-center transition-all bg-slate-900/40 hover:bg-slate-900/80 group">
                 
                 <div className="w-16 h-16 rounded-3xl bg-brand-600/20 text-brand-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
@@ -750,7 +750,7 @@ export function Capture({
       </div>
 
       {/* MOBILE ONLY (< md): Bottom Floating Dock - Slots Thumbnails & Quick Proceed */}
-      <div className="flex md:hidden flex-none bg-slate-950/95 backdrop-blur-md border-t border-slate-800 px-3 py-2 items-center justify-between gap-2 z-20 pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
+      <div className="flex md:hidden flex-none bg-slate-950/95 backdrop-blur-md border-t border-slate-800 px-3 pt-1.5 pb-6 items-center justify-between gap-2 z-20">
         
         {/* Horizontal Mini Slots */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
