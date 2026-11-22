@@ -25,8 +25,8 @@ export function Navbar({ userTier, setUserTier, onOpenSubscription, showToast, o
             onClick={onNavigateHome}
             className="flex items-center gap-1.5 sm:gap-3 cursor-pointer group select-none shrink-0"
           >
-            <div className="relative flex items-center justify-center w-8 h-8 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl overflow-hidden bg-brand-100 shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform duration-200 shrink-0">
-              <img src={phoodleLogo} alt="PHOODLE" className="w-full h-full object-cover" />
+            <div className="relative flex items-center justify-center w-9.5 h-9.5 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl overflow-hidden shadow-md shadow-purple-500/20 group-hover:scale-105 transition-transform duration-200 shrink-0">
+              <img src={phoodleLogo} alt="PHOODLE" className="w-full h-full object-cover scale-105" />
               {isPro && (
                 <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 sm:h-4 sm:w-4 items-center justify-center rounded-full bg-amber-400 text-slate-900 ring-2 ring-white text-[8px] sm:text-[9px] font-bold">
                   ★

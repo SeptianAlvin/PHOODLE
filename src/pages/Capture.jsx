@@ -422,7 +422,7 @@ export function Capture({
               <span className="hidden sm:inline">Kembali</span>
             </button>
             <div className="hidden sm:flex items-center gap-2 pl-2 border-l border-slate-700">
-              <img src="/phoodle-logo.png" alt="PHOODLE" className="w-5 h-5 rounded-md object-cover" />
+              <img src="/phoodle-logo.png" alt="PHOODLE" className="w-6 h-6 rounded-lg object-cover" />
               <span className="font-extrabold text-xs tracking-tight text-white">PHOODLE</span>
             </div>
           </div>
