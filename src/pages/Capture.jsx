@@ -40,6 +40,7 @@ export function Capture({
   // Camera states
   const videoRef = useRef(null);
   const streamRef = useRef(null);
+  const [cameraStream, setCameraStream] = useState(null);
   const [cameraError, setCameraError] = useState(null);
   const [isCameraReady, setIsCameraReady] = useState(false);
   const [isMirrored, setIsMirrored] = useState(true);
@@ -126,6 +127,7 @@ export function Capture({
     if (videoRef.current) {
       videoRef.current.srcObject = null;
     }
+    setCameraStream(null);
     setIsCameraReady(false);
   };
 
@@ -139,28 +141,33 @@ export function Capture({
         throw new Error('Browser ini tidak mendukung akses kamera perangkat.');
       }
 
-      // Constraints optimized for front camera & mobile/laptop
-      const constraints = {
-        video: {
-          facingMode: 'user',
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-        },
-        audio: false,
-      };
+      let stream;
+      // 1. Coba dulu dengan facingMode: 'user'
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'user' },
+          audio: false,
+        });
+      } catch (errFacing) {
+        console.warn('Fallback ke video standar tanpa facingMode:', errFacing);
+        // 2. Fallback otomatis ke { video: true, audio: false }
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: false,
+        });
+      }
 
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
       streamRef.current = stream;
+      setCameraStream(stream);
 
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        // iOS Safari requires explicit play() call
         try {
           await videoRef.current.play();
-        } catch {
-          // Play was interrupted or auto-play restriction
+          setIsCameraReady(true);
+        } catch (playErr) {
+          console.warn('Auto-play membutuhkan interaksi pengguna:', playErr);
         }
-        setIsCameraReady(true);
       }
     } catch (err) {
       console.warn('Camera access error:', err);
@@ -174,6 +181,23 @@ export function Capture({
       setIsCameraReady(false);
     }
   };
+
+  // Sinkronisasi srcObject dan play saat stream atau tab kamera aktif
+  useEffect(() => {
+    if (activeTab === 'camera' && cameraStream && videoRef.current) {
+      if (videoRef.current.srcObject !== cameraStream) {
+        videoRef.current.srcObject = cameraStream;
+      }
+      videoRef.current
+        .play()
+        .then(() => {
+          setIsCameraReady(true);
+        })
+        .catch((e) => {
+          console.warn('Video play waiting for user gesture:', e);
+        });
+    }
+  }, [cameraStream, activeTab]);
 
   // Manage camera lifecycle depending on activeTab
   useEffect(() => {
@@ -239,7 +263,15 @@ export function Capture({
 
   // Trigger capture sequence with countdown
   const startSingleCapture = (targetSlot) => {
-    if (!isCameraReady || countdown !== null) return;
+    if (countdown !== null) return;
+
+    if (!isCameraReady) {
+      if (videoRef.current && videoRef.current.videoWidth > 0) {
+        setIsCameraReady(true);
+      } else {
+        return;
+      }
+    }
 
     const slotToFill = targetSlot !== undefined ? targetSlot : activeSlotIndex;
 
@@ -458,10 +490,55 @@ export function Capture({
                 autoPlay
                 playsInline
                 muted
+                onLoadedMetadata={async () => {
+                  try {
+                    if (videoRef.current) {
+                      await videoRef.current.play();
+                      setIsCameraReady(true);
+                    }
+                  } catch (err) {
+                    console.warn('Play onLoadedMetadata blocked:', err);
+                  }
+                }}
+                onLoadedData={() => setIsCameraReady(true)}
+                onPlaying={() => setIsCameraReady(true)}
                 className={`w-full h-full object-cover select-none transition-transform duration-200 ${
                   isMirrored ? '-scale-x-100' : 'scale-x-100'
                 }`}
               />
+
+              {/* Standby / Autoplay Blocked Fallback: Tombol Nyalakan Kamera */}
+              {!cameraError && !isCameraReady && (
+                <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/85 backdrop-blur-xs p-4 text-center">
+                  <div className="w-14 h-14 rounded-2xl bg-brand-600/20 text-brand-400 flex items-center justify-center mb-3">
+                    <Camera className="w-7 h-7 animate-pulse" />
+                  </div>
+                  <h3 className="text-sm font-bold text-white mb-1">Kamera Siap Dihubungkan</h3>
+                  <p className="text-xs text-slate-400 mb-4 max-w-xs leading-relaxed">
+                    Sentuh tombol di bawah untuk menyalakan pratinjau kamera depan
+                  </p>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (videoRef.current && cameraStream) {
+                        try {
+                          videoRef.current.srcObject = cameraStream;
+                          await videoRef.current.play();
+                          setIsCameraReady(true);
+                          return;
+                        } catch (err) {
+                          console.warn('Manual play failed, restarting stream:', err);
+                        }
+                      }
+                      await startCameraStream();
+                    }}
+                    className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-extrabold text-xs shadow-lg shadow-brand-500/30 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
+                  >
+                    <Camera className="w-4 h-4" />
+                    <span>Nyalakan Kamera</span>
+                  </button>
+                </div>
+              )}
 
               {/* Countdown Number Overlay */}
               {countdown !== null && (
@@ -551,7 +628,11 @@ export function Capture({
                   <button
                     onClick={() => startSingleCapture(activeSlotIndex)}
                     disabled={!isCameraReady || countdown !== null}
-                    className="group relative flex items-center justify-center w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-white text-slate-900 p-1.5 shadow-2xl shadow-brand-500/30 hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none"
+                    className={`group relative flex items-center justify-center w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-white text-slate-900 p-1.5 shadow-2xl transition-all duration-200 ${
+                      isCameraReady && countdown === null
+                        ? 'shadow-brand-500/40 hover:scale-105 active:scale-95 cursor-pointer opacity-100'
+                        : 'opacity-40 cursor-not-allowed pointer-events-none'
+                    }`}
                     aria-label="Ambil Foto"
                   >
                     <div className="w-full h-full rounded-full border-4 border-slate-900 flex items-center justify-center bg-gradient-to-tr from-brand-600 via-indigo-500 to-purple-600 text-white">
